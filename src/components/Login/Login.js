@@ -1,6 +1,12 @@
 import './Login.scss';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from "react-router-dom";
 
 const Login = (prop) => {
+    let history = useHistory();
+    const handleCreateNewAccount = () => {
+        history.push("/register");
+    }
     return (
         <div className="login-container">
             <div className="container">
@@ -24,8 +30,10 @@ const Login = (prop) => {
                             <a className='forgot-password' href='#'>Forgot your password?</a>
                         </span>
                         <hr />
-                        <div className='text-center'>
-                            <button className='btn btn-success'>Create new account</button>
+                        <div className='text-center' onClick={() => handleCreateNewAccount()}>
+                            <button className='btn btn-success'>
+                                Create new account
+                            </button>
                         </div>
                     </div>
                 </div>
