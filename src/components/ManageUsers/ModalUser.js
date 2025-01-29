@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useState, useEffect } from 'react';
-import { fetchGroup, createNewUser } from "../../services/userService";
+import { fetchGroup, createNewUser, updateCurrentUser } from "../../services/userService";
 import { toast } from "react-toastify";
 import _ from "lodash";
 //not merge state
@@ -73,6 +73,8 @@ const ModalUser = (props) => {
 
     const checkValidateInputs = () => {
         //create user
+        if (action === 'UPDATE') return true;
+
         setValidInputs(validInputsDefault);
         console.log(">>> check user Data: ", userData)
         let arr = ['email', 'phone', 'password', 'group']
@@ -97,10 +99,16 @@ const ModalUser = (props) => {
         //create user
         let check = checkValidateInputs();
         if (check === true) {
-            let res = await createNewUser({ ...userData, groupId: userData['group'] });
+            let res = action === 'CREATE' ?
+                await createNewUser({ ...userData, groupId: userData['group'] })
+                : await updateCurrentUser({ ...userData, groupId: userData['group'] })
+
             if (res.data && res.data.EC === 0) {
                 props.onHide();
-                setUserData({ ...defaultUserData, group: userGroups[0].id })
+                setUserData({
+                    ...defaultUserData,
+                    group: userGroups && userGroups.length > 0 ? userGroups[0].id : ''
+                })
             }
             if (res.data && res.data.EC !== 0) {
                 toast.error(res.data.EM);
